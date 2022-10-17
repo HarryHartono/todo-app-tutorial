@@ -30,6 +30,13 @@ header {
     left: 0;
 }
 
+.title-head {
+    margin-top: 16px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+}
+
 .add-new-task {
     display: flex;
     justify-content: center;
@@ -47,6 +54,11 @@ header {
     padding: 8px;
     padding-left: 12px;
     flex: 1;
+    transition: all 0.3s;
+}
+
+.todo-title:hover {
+    box-shadow: 0 0 2px 4px rgba(255, 255, 255, 0.5);
 }
 
 #todo-title::placeholder {

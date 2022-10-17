@@ -11,6 +11,7 @@
         </header>
         
         <main class="main-body">
+            <div class="title-head">What are we going to achieve today?</div>
             <div class="add-new-task">
                 <input id="todo-title" type="text" placeholder="Add new task!">
                 <input id="date-picker" type="date">
@@ -233,7 +234,7 @@
 
                         const createInput = document.createElement('input');
                         createInput.type = 'checkbox';
-                        createInput.style = 'margin-right: 16px; ';
+                        createInput.style = 'margin-right: 12px; transform: scale(1.8)';
                         createInput.onchange = checkTodo;
                         createInput.dataset.todoId = todo.id;
                         if (todo.isDone === true) {
@@ -253,7 +254,7 @@
                         element.appendChild(elementDueDate);
 
                        
-                        element.style = 'display: flex; column-gap: 16px; ';
+                        element.style = 'display: flex; column-gap: 16px;';
 
                         const editButton = document.createElement('button');
                         editButton.innerText = 'Edit';
