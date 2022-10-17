@@ -45,7 +45,7 @@
 
             
             // Creates a todo
-            function createTodo(title, dueDate) {
+            const createTodo = (title, dueDate) => {
                 const id = '' + new Date().getTime();
 
                 todos.push({
@@ -58,7 +58,7 @@
             };
 
             //Deletes a todo
-            function removeTodo(idToDelete) {
+            const removeTodo = idToDelete => {
                 todos = todos.filter(function (todo) {
                     // if the id this todo matches idToDelete, return flase
                     //for anything else, return true
@@ -73,7 +73,7 @@
             };
 
             //toggle todo  
-            function toggleTodo(todoId, checked) {
+            const toggleTodo = (todoId, checked) => {
                 todos.forEach(function (todo) {
                     if (todo.id === todoId) {
                         todo.isDone = checked;
@@ -84,7 +84,7 @@
             };
 
             // edit todo
-            function editTheTodo(todoId) {
+            const editTheTodo = todoId => {
                 todos.forEach(function (todo) {
                     if (todo.id === todoId) {
                         todo.isEditing = true;
@@ -95,7 +95,7 @@
             };
 
             // update todo
-            function updateTheTodo(todoId, newTitle, newDueDate) {
+            const updateTheTodo = (todoId, newTitle, newDueDate) => {
                 todos.forEach(function (todo) {
                     if (todo.id === todoId) {
                         todo.isEditing = false;
@@ -107,12 +107,22 @@
                 saveTodos();
             };
 
-            function saveTodos() {
+            const cancelTheUpdate = todoId => {
+                todos.forEach(function (todo) {
+                    if (todo.id + 'cancel' === todoId) {
+                        todo.isEditing = false;
+                    };
+                });
+
+                saveTodos();
+            };
+
+            const saveTodos = () => {
                 localStorage.setItem('todos', JSON.stringify(todos));
             }
 
             // Control Section
-            function addToDo() {
+            const addToDo = () => {
                 const textbox = document.getElementById('todo-title');
                 const title = textbox.value;
 
@@ -122,16 +132,8 @@
                 createTodo(title, dueDate);
                 render();
             };
-            
-            function deleteTodo(event) {
-                const deleteButton = event.target;
-                const idToDelete = deleteButton.id;
-                
-                removeTodo(idToDelete);
-                render();
-            };
 
-            function checkTodo(event) {
+            const checkTodo = event => {
                 const createInput = event.target;
 
                 const todoId = createInput.dataset.todoId;
@@ -141,7 +143,7 @@
                 render();
             };
 
-            function editTodo(event) {
+            const editTodo = event => {
                 const editButtonclicked = event.target;
 
                 const todoId = editButtonclicked.id;
@@ -150,7 +152,7 @@
                 render();
             };
 
-            function updateTodo(event) {
+            const updateTodo = event => {
                 const updateButtonclicked = event.target;
 
                 const todoId = updateButtonclicked.id;
@@ -161,10 +163,26 @@
 
                 updateTheTodo(todoId, newTitle, newDueDate);
                 render();
+            };
+
+            const cancelUpdate = event => {
+                const cancelButton = event.target;
+
+                const todoId = cancelButton.id;
+
+                cancelTheUpdate(todoId);
+                render();
+            };
+
+            const onDelete = todoToDelete => {
+                return () => {
+                    removeTodo(todoToDelete.id);
+                    render();
+                }
             }
 
             // View Section
-            function render() {
+            const render = () => {
                 // reset our list
                 document.getElementById('todo-list').innerHTML = '';
 
@@ -188,6 +206,13 @@
                         updateButton.onclick = updateTodo;
                         updateButton.id = todo.id;
                         element.appendChild(updateButton);
+
+                        const cancelButton = document.createElement('button');
+                        cancelButton.innerText = 'Cancel';
+                        cancelButton.style = 'margin-left: 12px;';
+                        cancelButton.onclick = cancelUpdate;
+                        cancelButton.id = todo.id + 'cancel';
+                        element.appendChild(cancelButton);
 
                         const todoList = document.getElementById('todo-list');
                         todoList.appendChild(element);
@@ -218,8 +243,7 @@
                         const deleteButton = document.createElement('button');
                         deleteButton.innerText = 'Delete';
                         deleteButton.style = 'margin-left: 12px;';
-                        deleteButton.onclick = deleteTodo;
-                        deleteButton.id = todo.id;
+                        deleteButton.onclick = onDelete(todo);
                         element.appendChild(deleteButton);
 
                         const todoList = document.getElementById('todo-list');
