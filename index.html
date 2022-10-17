@@ -2,13 +2,24 @@
 <html>
     <head>
         <title>My Todo App</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <input id="todo-title" type="text" placeholder="Add new task!">
-        <input id="date-picker" type="date">
-        <button onclick="addToDo()">Add Todo</button>
 
-        <div id="todo-list"></div>
+        <header>
+            <div>Hello!!!</div>
+        </header>
+        
+        <main class="main-body">
+            <div class="add-new-task">
+                <input id="todo-title" type="text" placeholder="Add new task!">
+                <input id="date-picker" type="date">
+                <button class="add-todo-button" onclick="addToDo()">Add Todo</button>
+            </div>
+            <div id="todo-list"></div>
+        </main>
+
+
         <script>
             let todo1 = 'Get Groceries';
             let todo2 = 'Wash Car';
@@ -219,11 +230,10 @@
 
                     } else {
                         const element = document.createElement('div');
-                        element.innerText = todo.title + ' ' + todo.dueDate;
 
                         const createInput = document.createElement('input');
                         createInput.type = 'checkbox';
-                        createInput.style = 'margin-right: 16px';
+                        createInput.style = 'margin-right: 16px; ';
                         createInput.onchange = checkTodo;
                         createInput.dataset.todoId = todo.id;
                         if (todo.isDone === true) {
@@ -233,16 +243,28 @@
                         };
                         element.prepend(createInput);
 
+                        const elementTitle = document.createElement('div');
+                        elementTitle.innerText = todo.title;
+                        elementTitle.style = 'flex: 1'
+                        element.appendChild(elementTitle);
+
+                        const elementDueDate = document.createElement('div');
+                        elementDueDate.innerText = todo.dueDate;
+                        element.appendChild(elementDueDate);
+
+                       
+                        element.style = 'display: flex; column-gap: 16px; ';
+
                         const editButton = document.createElement('button');
                         editButton.innerText = 'Edit';
-                        editButton.style = 'margin-left: 12px;';
+                        editButton.style = '';
                         editButton.onclick = editTodo;
                         editButton.id = todo.id;
                         element.appendChild(editButton);
 
                         const deleteButton = document.createElement('button');
                         deleteButton.innerText = 'Delete';
-                        deleteButton.style = 'margin-left: 12px;';
+                        deleteButton.style = 'background-color: white;';
                         deleteButton.onclick = onDelete(todo);
                         element.appendChild(deleteButton);
 
