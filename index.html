@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>My Todo App</title>
+        <title>Harry's Todo App</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
     </head>
     <body>
 
         <header>
-            <div>Hello!!!</div>
+            <div class="logo">Harry's Todo App!</div>
+            <div>
+                <a href="https://www.linkedin.com/in/harryhartono1997/" target="_blank">
+                    <img class="linkedinlogo" src="icons/linkedin_network_social network_linkedin logo_icon.svg">
+                </a>
+            </div>
         </header>
         
         <main class="main-body">
@@ -17,6 +25,7 @@
                 <input id="date-picker" type="date">
                 <button class="add-todo-button" onclick="addToDo()">Add Todo</button>
             </div>
+            <div class="current-task">Your current task:</div>
             <div id="todo-list"></div>
         </main>
 
@@ -197,6 +206,8 @@
             const render = () => {
                 // reset our list
                 document.getElementById('todo-list').innerHTML = '';
+                document.getElementById('todo-title').value = '';
+                document.getElementById('date-picker').value = '';
 
                 todos.forEach(function (todo) {
                     if (todo.isEditing === true) {
@@ -204,24 +215,28 @@
                         
                         const editTodo = document.createElement('input');
                         editTodo.type = 'text';
+                        editTodo.value = todo.title;
+                        editTodo.style = 'margin-left: 44px; border: 1px solid black; border-right: 0; background-color: transparent; width: 180px; height: 20px';
                         editTodo.id = todo.id + 'text';
                         element.appendChild(editTodo);
 
                         const editDate = document.createElement('input');
                         editDate.type = 'date';
+                        editDate.value = todo.dueDate;
+                        editDate.style = 'border: 1px solid black; border-left: 0; background-color: transparent; width: 100px; height: 22px';
                         editDate.id = todo.id + 'date';
                         element.appendChild(editDate);
 
                         const updateButton = document.createElement('button');
                         updateButton.innerText = 'Update';
-                        updateButton.style = 'margin-left: 12px;';
+                        updateButton.style = 'background-color: transparent; border: 1px solid black; margin-left: 16px';
                         updateButton.onclick = updateTodo;
                         updateButton.id = todo.id;
                         element.appendChild(updateButton);
 
                         const cancelButton = document.createElement('button');
                         cancelButton.innerText = 'Cancel';
-                        cancelButton.style = 'margin-left: 12px;';
+                        cancelButton.style = 'background-color: transparent; border: 1px solid black; margin-left: 5px';
                         cancelButton.onclick = cancelUpdate;
                         cancelButton.id = todo.id + 'cancel';
                         element.appendChild(cancelButton);
@@ -234,7 +249,8 @@
 
                         const createInput = document.createElement('input');
                         createInput.type = 'checkbox';
-                        createInput.style = 'margin-right: 12px; transform: scale(1.8)';
+                        createInput.classList.add('stylecheckbox');
+                        createInput.style = 'margin-right: 12px; transform: scale(1.8); background-color: transparent;';
                         createInput.onchange = checkTodo;
                         createInput.dataset.todoId = todo.id;
                         if (todo.isDone === true) {
@@ -246,26 +262,27 @@
 
                         const elementTitle = document.createElement('div');
                         elementTitle.innerText = todo.title;
-                        elementTitle.style = 'flex: 1'
+                        elementTitle.style = 'width: 180px'
                         element.appendChild(elementTitle);
 
                         const elementDueDate = document.createElement('div');
                         elementDueDate.innerText = todo.dueDate;
+                        elementDueDate.style = 'width: 100px'
                         element.appendChild(elementDueDate);
 
                        
-                        element.style = 'display: flex; column-gap: 16px;';
+                        element.style = 'display: flex; column-gap: 16px; align-items: center';
 
                         const editButton = document.createElement('button');
                         editButton.innerText = 'Edit';
-                        editButton.style = '';
+                        editButton.style = 'background-color: transparent; border: 1px solid black; height: 20px';
                         editButton.onclick = editTodo;
                         editButton.id = todo.id;
                         element.appendChild(editButton);
 
                         const deleteButton = document.createElement('button');
                         deleteButton.innerText = 'Delete';
-                        deleteButton.style = 'background-color: white;';
+                        deleteButton.style = 'background-color: transparent; border: 1px solid black; height: 20px';
                         deleteButton.onclick = onDelete(todo);
                         element.appendChild(deleteButton);
 
