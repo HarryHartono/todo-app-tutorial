@@ -119,4 +119,5 @@ header {
 .stylecheckbox {
     opacity: 0.8;
     cursor: pointer;
+    position: relative;
 }
