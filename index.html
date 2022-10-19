@@ -123,9 +123,26 @@
             const updateTheTodo = (todoId, newTitle, newDueDate) => {
                 todos.forEach(function (todo) {
                     if (todo.id === todoId) {
-                        todo.isEditing = false;
-                        todo.title = newTitle;
-                        todo.dueDate = newDueDate;
+                        if (newTitle === '') {
+                            if (newDueDate === 'undefined-undefined-') {
+                                todo.isEditing = true;
+                                todo.errorTitle = true;
+                                todo.errorDate = true;
+                            } else {
+                                todo.isEditing = true;
+                                todo.errorTitle = true;
+                            }
+                        } else if (newDueDate === 'undefined-undefined-') {
+                            todo.errorDate = true;
+                            todo.isEditing = true;
+
+                        } else {
+                            todo.isEditing = false;
+                            todo.title = newTitle;
+                            todo.dueDate = newDueDate;
+                            todo.errorDate = false;
+                            todo.errorTitle = false;
+                        }; 
                     };
                 });
 
@@ -155,14 +172,14 @@
                 const dueDate = datePicker.value.split('-')[2] + '-' + datePicker.value.split('-')[1] + '-' + datePicker.value.split('-')[0];
 
                 if (title === '') {
-                    if (dueDate === '') {
+                    if (dueDate === 'undefined-undefined-') {
                         const addError = document.getElementById('error-message')
                         addError.innerText = 'Please input task and due date!'
                     } else {
                         const addError = document.getElementById('error-message')
                         addError.innerText = 'Please input task!'
                     }
-                } else if (dueDate === '') {
+                } else if (dueDate === 'undefined-undefined-') {
                     const addError = document.getElementById('error-message')
                     addError.innerText = 'Please input due date!'
                 } else {
@@ -197,8 +214,8 @@
                 const textbox = document.getElementById(todoId + 'text');
                 const newTitle = textbox.value;
                 const datePicker = document.getElementById(todoId + 'date');
-                const newDueDate = datePicker.value;
-
+                const newDueDate =  datePicker.value.split('-')[2] + '-' + datePicker.value.split('-')[1] + '-' + datePicker.value.split('-')[0];
+                
                 updateTheTodo(todoId, newTitle, newDueDate);
                 render();
             };
@@ -230,25 +247,26 @@
 
                 todos.forEach(function (todo) {
                     if (todo.isEditing === true) {
+                        const elementEditContainer = document.createElement('div');
                         const element = document.createElement('div');
-                        
+                            
                         const editTodo = document.createElement('input');
                         editTodo.type = 'text';
                         editTodo.value = todo.title;
-                        editTodo.style = 'margin-left: 44px; margin-right: 8px; border: 1px solid black; background-color: transparent; width: 184px; height: 20px';
+                        editTodo.style = 'margin-left: 44px; margin-right: 8px; border: 1px solid black; background-color: transparent; width: 174px; height: 20px';
                         editTodo.id = todo.id + 'text';
                         element.appendChild(editTodo);
 
                         const editDate = document.createElement('input');
                         editDate.type = 'date';
-                        editDate.value = todo.dueDate;
+                        editDate.value = todo.dueDate.split('-')[2] + '-' + todo.dueDate.split('-')[1] + '-' + todo.dueDate.split('-')[0];
                         editDate.style = 'border: 1px solid black; background-color: transparent; width: 100px; height: 22px';
                         editDate.id = todo.id + 'date';
                         element.appendChild(editDate);
 
                         const updateButton = document.createElement('button');
                         updateButton.innerText = 'Update';
-                        updateButton.style = 'background-color: transparent; border: 1px solid black; margin-left: 10px';
+                        updateButton.style = 'background-color: transparent; border: 1px solid black; margin-left: 22px';
                         updateButton.onclick = updateTodo;
                         updateButton.id = todo.id;
                         element.appendChild(updateButton);
@@ -261,12 +279,35 @@
                         element.appendChild(cancelButton);
 
                         const todoList = document.getElementById('todo-list');
-                        todoList.appendChild(element);
+                        elementEditContainer.appendChild(element);
+                        
 
+                        if (todo.errorTitle === true && todo.errorDate === true) {
+                            const createErrorMsg = document.createElement('div');
+                            createErrorMsg.innerText = 'Task and Date cannot be blank!';
+                            createErrorMsg.style = 'font-size: 0.8rem; color: rgb(120, 0, 0); margin-left: 43px; margin-top: 2px'
+                            elementEditContainer.appendChild(createErrorMsg);
+                        } else if (todo.errorDate === true) {
+                            const createErrorMsg = document.createElement('div');
+                            createErrorMsg.innerText = 'Date cannot be blank!';
+                            createErrorMsg.style = 'font-size: 0.8rem; color: rgb(120, 0, 0); margin-left: 43px; margin-top: 2px'
+                            elementEditContainer.appendChild(createErrorMsg);
+                        } else if (todo.errorTitle === true) {
+                            const createErrorMsg = document.createElement('div');
+                            createErrorMsg.innerText = 'Task cannot be blank!';
+                            createErrorMsg.style = 'font-size: 0.8rem; color: rgb(120, 0, 0); margin-left: 43px; margin-top: 2px'
+                            elementEditContainer.appendChild(createErrorMsg);
+                        };
+
+                        todoList.appendChild(elementEditContainer);
                     } else {
                         const element = document.createElement('div');
 
                         const createInput = document.createElement('input');
+                        const elementInput = document.createElement('div');
+                        const spanInput = document.createElement('span');
+                        elementInput.classList.add('checkbox-container');
+                        spanInput.classList.add('checkmark');
                         createInput.type = 'checkbox';
                         createInput.classList.add('stylecheckbox');
                         createInput.style = 'margin-right: 12px; transform: scale(1.8); background-color: transparent;';
@@ -277,20 +318,19 @@
                         } else {
                             createInput.checked = false;
                         };
-                        element.prepend(createInput);
+                        elementInput.prepend(createInput);
+                        elementInput.prepend(spanInput)
+                        element.prepend(elementInput);
 
                         const elementTitle = document.createElement('div');
                         elementTitle.innerText = todo.title;
-                        elementTitle.style = 'width: 180px;'
+                        elementTitle.style = 'width: 170px;'
                         element.appendChild(elementTitle);
 
                         const elementDueDate = document.createElement('div');
                         elementDueDate.innerText = todo.dueDate;
-                        elementDueDate.style = 'width: 110px'
+                        elementDueDate.style = 'width: 120px'
                         element.appendChild(elementDueDate);
-
-                       
-                        element.style = 'display: flex; column-gap: 16px; align-items: center';
 
                         const editButton = document.createElement('button');
                         editButton.innerText = 'Edit';
@@ -307,6 +347,8 @@
 
                         const todoList = document.getElementById('todo-list');
                         todoList.appendChild(element);
+
+                        element.style = 'display: flex; column-gap: 16px; align-items: center';
                     };
                 });
             };
