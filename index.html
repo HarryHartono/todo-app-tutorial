@@ -3,14 +3,15 @@
     <head>
         <title>Harry's Todo App</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/x-icon" href="/icons/logo-to-do.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Silkscreen&display=swap" rel="stylesheet">
     </head>
     <body>
 
         <header>
-            <div class="logo">Harry's Todo App!</div>
+            <div class="logo"><a class="logo-link" href="https://www.linkedin.com/in/harryhartono1997/" target="_blank">Harry's Todo App!</a></div>
             <div>
                 <a href="https://www.linkedin.com/in/harryhartono1997/" target="_blank">
                     <img class="linkedinlogo" src="icons/linkedin_network_social network_linkedin logo_icon.svg">
@@ -20,10 +21,13 @@
         
         <main class="main-body">
             <div class="title-head">What are we going to achieve today?</div>
-            <div class="add-new-task">
-                <input id="todo-title" type="text" placeholder="Add new task!">
-                <input id="date-picker" type="date">
-                <button class="add-todo-button" onclick="addToDo()">Add Todo</button>
+            <div id="new-task-container">
+                <div class="add-new-task">
+                    <input id="todo-title" type="text" placeholder="Add new task!">
+                    <input id="date-picker" type="date">
+                    <button class="add-todo-button" onclick="addToDo()">Add Todo</button>
+                </div>
+                <div id="error-message"></div>
             </div>
             <div class="current-task">Your current task:</div>
             <div id="todo-list"></div>
@@ -50,15 +54,15 @@
             } else {
                 todos = [{
                     title: 'Get groceries',
-                    dueDate: '2021-10-04',
+                    dueDate: '04-10-2021',
                     id: 'id1'
                 }, {
                     title: 'Wash car',
-                    dueDate: '2021-02-03',
+                    dueDate: '03-02-2021',
                     id: 'id2'
                 }, {
                     title: 'Make dinner',
-                    dueDate: '2021-03-04',
+                    dueDate: '04-03-2021',
                     id: 'id3'
                 }];
 
@@ -148,10 +152,23 @@
                 const title = textbox.value;
 
                 const datePicker = document.getElementById('date-picker');
-                const dueDate = datePicker.value;
+                const dueDate = datePicker.value.split('-')[2] + '-' + datePicker.value.split('-')[1] + '-' + datePicker.value.split('-')[0];
 
-                createTodo(title, dueDate);
-                render();
+                if (title === '') {
+                    if (dueDate === '') {
+                        const addError = document.getElementById('error-message')
+                        addError.innerText = 'Please input task and due date!'
+                    } else {
+                        const addError = document.getElementById('error-message')
+                        addError.innerText = 'Please input task!'
+                    }
+                } else if (dueDate === '') {
+                    const addError = document.getElementById('error-message')
+                    addError.innerText = 'Please input due date!'
+                } else {
+                    createTodo(title, dueDate);
+                    render();
+                };
             };
 
             const checkTodo = event => {
@@ -207,7 +224,9 @@
                 // reset our list
                 document.getElementById('todo-list').innerHTML = '';
                 document.getElementById('todo-title').value = '';
-                document.getElementById('date-picker').value = '';
+                document.getElementById('date-picker').value = new Date().toISOString().slice(0,10);
+                const addError = document.getElementById('error-message')
+                addError.innerText = ''
 
                 todos.forEach(function (todo) {
                     if (todo.isEditing === true) {
@@ -216,20 +235,20 @@
                         const editTodo = document.createElement('input');
                         editTodo.type = 'text';
                         editTodo.value = todo.title;
-                        editTodo.style = 'margin-left: 44px; border: 1px solid black; border-right: 0; background-color: transparent; width: 180px; height: 20px';
+                        editTodo.style = 'margin-left: 44px; margin-right: 8px; border: 1px solid black; background-color: transparent; width: 184px; height: 20px';
                         editTodo.id = todo.id + 'text';
                         element.appendChild(editTodo);
 
                         const editDate = document.createElement('input');
                         editDate.type = 'date';
                         editDate.value = todo.dueDate;
-                        editDate.style = 'border: 1px solid black; border-left: 0; background-color: transparent; width: 100px; height: 22px';
+                        editDate.style = 'border: 1px solid black; background-color: transparent; width: 100px; height: 22px';
                         editDate.id = todo.id + 'date';
                         element.appendChild(editDate);
 
                         const updateButton = document.createElement('button');
                         updateButton.innerText = 'Update';
-                        updateButton.style = 'background-color: transparent; border: 1px solid black; margin-left: 16px';
+                        updateButton.style = 'background-color: transparent; border: 1px solid black; margin-left: 10px';
                         updateButton.onclick = updateTodo;
                         updateButton.id = todo.id;
                         element.appendChild(updateButton);
@@ -262,12 +281,12 @@
 
                         const elementTitle = document.createElement('div');
                         elementTitle.innerText = todo.title;
-                        elementTitle.style = 'width: 180px'
+                        elementTitle.style = 'width: 180px;'
                         element.appendChild(elementTitle);
 
                         const elementDueDate = document.createElement('div');
                         elementDueDate.innerText = todo.dueDate;
-                        elementDueDate.style = 'width: 100px'
+                        elementDueDate.style = 'width: 110px'
                         element.appendChild(elementDueDate);
 
                        
